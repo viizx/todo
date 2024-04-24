@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: ToDo API
+  description: API for managing ToDos
+  version: "1.0"
+servers:
+  - url: http://localhost:8080/api
+tags:
+  - name: server
+    description: Server functionality
+  - name: todo
+    description: To do collection
+paths:
+  /hello:
+    get:
+      tags:
+        - server
+      summary: Returns a hello message
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /health:
+    get:
+      tags:
+        - server
+      summary: Checks the health of the database
+      responses:
+        "200":
+          description: Database is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "500":
+          description: Database health check failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /todos:
+    get:
+      tags:
+        - todo
+      summary: Retrieves all todos
+      responses:
+        "200":
+          description: A list of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ToDo"
+        "500":
+          description: Failed to retrieve todos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    post:
+      tags:
+        - todo
+      summary: Creates a new todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToDoRequest"
+      responses:
+        "201":
+          description: ToDo created
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /todos/{id}:
+    get:
+      tags:
+        - todo
+      summary: Retrieves a single todo by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A single todo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ToDo"
+        "404":
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    patch:
+      tags:
+        - todo
+      summary: Updates a todo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToDoRequest"
+      responses:
+        "204":
+          description: ToDo updated successfully
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Failed to update todo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+components:
+  schemas:
+    ToDo:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        done:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ToDoRequest:
+      type: object
+      properties:
+        text:
+          type: string
+        done:
+          type: boolean
