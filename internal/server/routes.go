@@ -76,22 +76,26 @@ func (s *Server) toDoHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) toDosHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
-		sort := r.URL.Query().Get("sort")
-		if sort != "ASC" && sort != "DESC" {
-			sort = "DESC"
-		}
-
-		todos, err := s.db.GetAllToDos(sort)
-		if err != nil {
-			sendErrorResponse(w, "Failed to retrieve todos", http.StatusInternalServerError)
-			return
-		}
-		json.NewEncoder(w).Encode(todos)
+		s.getAllToDos(w, r)
 	case "POST":
 		s.createToDoHandler(w, r)
 	default:
 		sendErrorResponse(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
+}
+
+func (s *Server) getAllToDos(w http.ResponseWriter, r *http.Request) {
+	sort := r.URL.Query().Get("sort")
+	if sort != "ASC" && sort != "DESC" {
+		sort = "DESC"
+	}
+
+	todos, err := s.db.GetAllToDos(sort)
+	if err != nil {
+		sendErrorResponse(w, "Failed to retrieve todos", http.StatusInternalServerError)
+		return
+	}
+	json.NewEncoder(w).Encode(todos)
 }
 
 func (s *Server) getTodoHandler(w http.ResponseWriter, r *http.Request) {
