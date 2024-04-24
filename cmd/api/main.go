@@ -11,8 +11,8 @@ import (
 func main() {
 	smsService := notification.NewInfobipSMSService(
 		os.Getenv("INFOBIP_API_KEY"),
-		"+447491163443",
-		"https://vv8dxv.api.infobip.com/sms/2/text/advanced",
+		os.Getenv("SMS_SENDER"),
+		fmt.Sprintf("https://%s/sms/2/text/advanced", os.Getenv("INFOBIP_API_BASE_URL")),
 	)
 
 	go smsService.HandleErrors()
