@@ -34,7 +34,7 @@ export default function Form({ fetchTodos }) {
   return (
     <div className="w-full my-4">
       <div className="mx-auto max-w-2xl">
-        <div className="p-4 relative z-10 bg-white border rounded-xl md:p-10">
+        <div className="p-2 relative z-10 bg-white border rounded-xl">
           <form onSubmit={handleSubmit}>
             <div className="mb-4 sm:mb-8">
               <textarea
