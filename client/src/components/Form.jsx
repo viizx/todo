@@ -16,8 +16,6 @@ export default function Form({ fetchTodos }) {
         },
         body: JSON.stringify(todo),
       });
-      console.log(response);
-      console.log(response.status === 201);
 
       if (!response.ok) {
         throw new Error("Failed to create todo");
